@@ -1,11 +1,1461 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR" data-theme="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0f1119">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>LogiSync</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    /* ═══════════════════════════════════════════════════════════
+       1. RESET GLOBAL
+    ═══════════════════════════════════════════════════════════ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      width: 100%; height: 100%; min-height: 100dvh;
+      font-family: "Geist", system-ui, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      font-feature-settings: "ss01", "cv11";
+      overflow: hidden;
+    }
+    * { scrollbar-width: none; }
+    *::-webkit-scrollbar { display: none; }
+    button { border: none; background: none; cursor: pointer; font-family: inherit; }
+    input { font-family: inherit; }
+    [hidden] { display: none !important; }
+
+    /* ═══════════════════════════════════════════════════════════
+       2. DESIGN TOKENS — verbatim de tokens.css
+    ═══════════════════════════════════════════════════════════ */
+    :root {
+      --ls-primary:        oklch(0.55 0.21 255);
+      --ls-primary-deep:   oklch(0.40 0.20 255);
+      --ls-primary-soft:   oklch(0.92 0.08 250);
+      --ls-accent:         oklch(0.86 0.18 90);
+      --ls-accent-deep:    oklch(0.70 0.18 80);
+
+      --ls-online:         oklch(0.72 0.18 150);
+      --ls-online-bg:      oklch(0.95 0.06 150);
+      --ls-syncing:        oklch(0.75 0.16 70);
+      --ls-syncing-bg:     oklch(0.96 0.06 80);
+      --ls-offline:        oklch(0.55 0.02 250);
+      --ls-offline-bg:     oklch(0.94 0.005 250);
+
+      --ls-danger:         oklch(0.60 0.22 25);
+      --ls-warn:           oklch(0.78 0.15 60);
+      --ls-success:        oklch(0.65 0.16 150);
+
+      --ls-ink:            oklch(0.18 0.012 250);
+      --ls-ink-2:          oklch(0.32 0.012 250);
+      --ls-ink-3:          oklch(0.50 0.010 250);
+      --ls-ink-4:          oklch(0.68 0.008 250);
+      --ls-line:           oklch(0.91 0.006 250);
+      --ls-line-2:         oklch(0.85 0.006 250);
+      --ls-surface:        #ffffff;
+      --ls-surface-2:      oklch(0.985 0.003 90);
+      --ls-bg:             oklch(0.97 0.004 90);
+
+      --ls-font-display:   "Geist", "Space Grotesk", system-ui, sans-serif;
+      --ls-font-body:      "Geist", system-ui, sans-serif;
+      --ls-font-mono:      "Geist Mono", "JetBrains Mono", ui-monospace, monospace;
+
+      --ls-r-sm:   8px;
+      --ls-r-md:   14px;
+      --ls-r-lg:   20px;
+      --ls-r-xl:   28px;
+      --ls-r-pill: 999px;
+
+      --ls-touch-min: 56px;
+      --ls-touch-cta: 72px;
+
+      --ls-shadow-card: 0 1px 0 rgba(15,17,21,.04), 0 6px 18px -8px rgba(15,17,21,.10);
+      --ls-shadow-cta:  0 1px 0 rgba(255,255,255,.4) inset, 0 8px 20px -6px oklch(0.55 0.21 255 / .35);
+      --ls-shadow-pop:  0 12px 40px -8px rgba(15,17,21,.20);
+    }
+
+    [data-theme="dark"] {
+      --ls-ink:            oklch(0.97 0.005 250);
+      --ls-ink-2:          oklch(0.86 0.008 250);
+      --ls-ink-3:          oklch(0.66 0.008 250);
+      --ls-ink-4:          oklch(0.48 0.008 250);
+      --ls-line:           oklch(0.22 0.008 250);
+      --ls-line-2:         oklch(0.30 0.008 250);
+      --ls-surface:        oklch(0.16 0.010 250);
+      --ls-surface-2:      oklch(0.14 0.010 250);
+      --ls-bg:             oklch(0.10 0.010 250);
+      --ls-primary:        oklch(0.72 0.20 255);
+      --ls-primary-soft:   oklch(0.30 0.10 255);
+      --ls-online-bg:      oklch(0.25 0.10 150);
+      --ls-syncing-bg:     oklch(0.28 0.10 70);
+      --ls-offline-bg:     oklch(0.22 0.008 250);
+      --ls-shadow-card:    0 1px 0 rgba(255,255,255,.03), 0 6px 18px -8px rgba(0,0,0,.5);
+      --ls-shadow-cta:     0 1px 0 rgba(255,255,255,.15) inset, 0 8px 20px -6px oklch(0.72 0.20 255 / .50);
+      --ls-shadow-pop:     0 12px 40px -8px rgba(0,0,0,.60);
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       3. BASE COMPONENTS — verbatim de tokens.css
+    ═══════════════════════════════════════════════════════════ */
+    .ls-screen {
+      font-family: var(--ls-font-body);
+      color: var(--ls-ink);
+      background: var(--ls-bg);
+      width: 100%; height: 100%;
+      position: absolute; top: 0; left: 0;
+      overflow: hidden;
+      font-feature-settings: "ss01","cv11";
+      -webkit-font-smoothing: antialiased;
+      font-size: 14px;
+      line-height: 1.4;
+      letter-spacing: -0.005em;
+      display: flex;
+      flex-direction: column;
+    }
+    .ls-screen *, .ls-screen *::before, .ls-screen *::after { box-sizing: border-box; }
+    .ls-screen *::-webkit-scrollbar { display: none; }
+    .ls-screen * { scrollbar-width: none; }
+
+    .ls-statusbar {
+      height: 44px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 22px;
+      font-family: var(--ls-font-mono);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--ls-ink);
+      letter-spacing: 0.02em;
+    }
+    .ls-sb-right { display: flex; align-items: center; gap: 6px; }
+
+    .ls-conn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      border-radius: var(--ls-r-pill);
+      font-family: var(--ls-font-mono);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .ls-conn-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .ls-conn[data-state="online"]  { background: var(--ls-online-bg);  color: var(--ls-online); }
+    .ls-conn[data-state="syncing"] { background: var(--ls-syncing-bg); color: var(--ls-syncing); }
+    .ls-conn[data-state="offline"] { background: var(--ls-offline-bg); color: var(--ls-offline); }
+    .ls-conn[data-state="online"]  .ls-conn-dot { background: var(--ls-online); }
+    .ls-conn[data-state="syncing"] .ls-conn-dot { background: var(--ls-syncing); animation: ls-pulse 1.4s ease-in-out infinite; }
+    .ls-conn[data-state="offline"] .ls-conn-dot { background: var(--ls-offline); }
+
+    @keyframes ls-pulse {
+      0%,100% { box-shadow: 0 0 0 0 currentColor; opacity: 1; }
+      50%      { box-shadow: 0 0 0 5px transparent; opacity: 0.6; }
+    }
+
+    .ls-cta {
+      width: 100%;
+      height: var(--ls-touch-cta);
+      border-radius: var(--ls-r-lg);
+      border: none;
+      background: var(--ls-primary);
+      color: white;
+      font-family: var(--ls-font-display);
+      font-size: 17px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      cursor: pointer;
+      box-shadow: var(--ls-shadow-cta);
+      transition: opacity 0.15s, transform 0.1s;
+    }
+    .ls-cta:active { opacity: 0.88; transform: scale(0.985); }
+    .ls-cta:disabled { background: var(--ls-line); color: var(--ls-ink-3); box-shadow: none; cursor: default; transform: none; opacity: 1; }
+
+    /* Typography helpers */
+    .ls-display-xl { font-family: var(--ls-font-display); font-size: 32px; font-weight: 600; letter-spacing: -0.025em; line-height: 1.05; }
+    .ls-display-lg { font-family: var(--ls-font-display); font-size: 26px; font-weight: 600; letter-spacing: -0.02em;  line-height: 1.1; }
+    .ls-display-md { font-family: var(--ls-font-display); font-size: 20px; font-weight: 600; letter-spacing: -0.015em; line-height: 1.15; }
+    .ls-h1         { font-size: 18px; font-weight: 600; letter-spacing: -0.01em; }
+    .ls-h2         { font-size: 15px; font-weight: 600; letter-spacing: -0.005em; }
+    .ls-overline   { font-family: var(--ls-font-mono); font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ls-ink-3); }
+    .ls-mono       { font-family: var(--ls-font-mono); }
+    .ls-muted      { color: var(--ls-ink-3); }
+    .ls-muted-2    { color: var(--ls-ink-4); }
+
+    /* ═══════════════════════════════════════════════════════════
+       4. MVP COMPONENTS
+    ═══════════════════════════════════════════════════════════ */
+
+    /* Input */
+    .ls-input {
+      width: 100%;
+      height: var(--ls-touch-min);
+      border-radius: var(--ls-r-md);
+      border: 1px solid var(--ls-line-2);
+      background: var(--ls-surface);
+      color: var(--ls-ink);
+      font-family: var(--ls-font-body);
+      font-size: 15px;
+      padding: 0 16px;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .ls-input:focus { border-color: var(--ls-primary); }
+    .ls-input::placeholder { color: var(--ls-ink-4); }
+
+    /* Label */
+    .ls-label {
+      font-family: var(--ls-font-mono);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--ls-ink-3);
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    /* Package card */
+    .pkg-card {
+      background: var(--ls-surface);
+      border: 0.5px solid var(--ls-line);
+      border-radius: var(--ls-r-lg);
+      box-shadow: var(--ls-shadow-card);
+      padding: 16px 16px 14px;
+      transition: opacity 0.25s;
+    }
+    .pkg-card + .pkg-card { margin-top: 10px; }
+    .pkg-card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .pkg-id-row { display: flex; align-items: center; gap: 8px; }
+    .pkg-seq-badge {
+      width: 28px; height: 28px;
+      border-radius: 8px;
+      background: var(--ls-line);
+      font-family: var(--ls-font-mono);
+      font-size: 12px; font-weight: 700;
+      color: var(--ls-ink-2);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .pkg-code {
+      font-size: 11px; font-weight: 500;
+      color: var(--ls-ink-3);
+      letter-spacing: 0.04em;
+    }
+    .pkg-address {
+      margin-bottom: 8px;
+      font-size: 17px;
+    }
+    .pkg-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+      color: var(--ls-ink-3);
+      margin-bottom: 14px;
+    }
+    .pkg-weight {
+      font-family: var(--ls-font-mono);
+      font-size: 12px;
+      color: var(--ls-ink-2);
+    }
+    .btn-detail {
+      width: 100%;
+      height: 44px;
+      border-radius: var(--ls-r-md);
+      background: var(--ls-surface-2);
+      border: 0.5px solid var(--ls-line);
+      color: var(--ls-ink-2);
+      font-size: 14px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: background 0.15s;
+      font-family: var(--ls-font-body);
+    }
+    .btn-detail:active { background: var(--ls-line); }
+    .pkg-delivered-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 0 2px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--ls-online);
+      font-family: var(--ls-font-mono);
+      letter-spacing: 0.03em;
+    }
+    .pkg-cached-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 0 2px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--ls-syncing);
+      font-family: var(--ls-font-mono);
+      letter-spacing: 0.03em;
+    }
+
+    /* Priority badge */
+    .priority-badge {
+      display: inline-flex; align-items: center;
+      padding: 3px 9px;
+      border-radius: var(--ls-r-pill);
+      font-family: var(--ls-font-mono);
+      font-size: 10px; font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .priority-badge[data-kind="Alta"]   { background: var(--ls-accent); color: var(--ls-ink); }
+    .priority-badge[data-kind="Normal"] { background: var(--ls-line);   color: var(--ls-ink-2); }
+    .priority-badge[data-kind="Frágil"] {
+      background: color-mix(in oklch, var(--ls-warn) 18%, transparent);
+      border: 0.5px solid color-mix(in oklch, var(--ls-warn) 35%, transparent);
+      color: var(--ls-warn);
+    }
+
+    /* User avatar */
+    .user-avatar {
+      width: 44px; height: 44px;
+      border-radius: 22px;
+      background: var(--ls-line);
+      font-family: var(--ls-font-mono);
+      font-size: 14px; font-weight: 600;
+      color: var(--ls-ink-2);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+
+    /* Back button */
+    .btn-back {
+      width: 40px; height: 40px;
+      border-radius: 12px;
+      border: 0.5px solid var(--ls-line);
+      background: var(--ls-surface);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      color: var(--ls-ink);
+      flex-shrink: 0;
+      transition: background 0.15s;
+    }
+    .btn-back:active { background: var(--ls-line); }
+
+    /* Stats strip */
+    .stats-strip {
+      display: flex;
+      margin: 0 22px 20px;
+      background: var(--ls-surface);
+      border-radius: var(--ls-r-md);
+      border: 0.5px solid var(--ls-line);
+      box-shadow: var(--ls-shadow-card);
+    }
+    .stats-cell { flex: 1; padding: 12px 14px; }
+    .stats-cell:not(:last-child) { border-right: 0.5px solid var(--ls-line); }
+    .stats-value {
+      font-family: var(--ls-font-display);
+      font-size: 22px; font-weight: 600;
+      letter-spacing: -0.02em;
+      color: var(--ls-ink);
+      display: block;
+    }
+    .stats-label {
+      font-family: var(--ls-font-mono);
+      font-size: 10px; font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--ls-ink-4);
+      margin-top: 2px;
+      display: block;
+    }
+
+    /* Info card */
+    .info-card {
+      background: var(--ls-surface);
+      border: 0.5px solid var(--ls-line);
+      border-radius: var(--ls-r-lg);
+      box-shadow: var(--ls-shadow-card);
+      overflow: hidden;
+    }
+    .info-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 13px 16px;
+    }
+    .info-row + .info-row { border-top: 0.5px solid var(--ls-line); }
+    .info-row-label {
+      font-family: var(--ls-font-mono);
+      font-size: 11px; font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--ls-ink-3);
+    }
+    .info-row-value {
+      font-family: var(--ls-font-mono);
+      font-size: 13px; font-weight: 500;
+      color: var(--ls-ink-2);
+      text-align: right;
+    }
+
+    /* Queue row */
+    .queue-row {
+      padding: 14px 16px;
+      border-radius: var(--ls-r-md);
+      border: 1px dashed color-mix(in oklch, var(--ls-offline) 50%, transparent);
+      background: color-mix(in oklch, var(--ls-offline) 4%, var(--ls-surface));
+    }
+    .queue-row + .queue-row { margin-top: 8px; }
+    .queue-row-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+    .queue-row-ts {
+      font-family: var(--ls-font-mono);
+      font-size: 11px;
+      color: var(--ls-ink-4);
+      margin-left: auto;
+    }
+    .queue-address {
+      color: var(--ls-ink-2);
+      margin-bottom: 4px;
+    }
+
+    /* Pinned CTA area */
+    .pinned-cta {
+      padding: 16px 22px calc(16px + env(safe-area-inset-bottom));
+      flex-shrink: 0;
+    }
+
+    /* Scrollable content */
+    .scroll-area {
+      flex: 1;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior: contain;
+    }
+
+    /* Divider */
+    .section-divider { height: 0.5px; background: var(--ls-line); margin: 0 22px; }
+
+    /* Empty state */
+    .empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 56px 32px;
+      text-align: center;
+      color: var(--ls-ink-3);
+      gap: 12px;
+    }
+    .empty-state svg { opacity: 0.25; }
+
+    /* Count badge */
+    .count-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 22px; height: 22px;
+      border-radius: 999px;
+      background: var(--ls-primary-soft);
+      color: var(--ls-primary);
+      font-family: var(--ls-font-mono);
+      font-size: 11px; font-weight: 600;
+      padding: 0 6px;
+    }
+
+    /* Toast */
+    .ls-toast {
+      position: fixed;
+      bottom: calc(100px + env(safe-area-inset-bottom));
+      left: 22px; right: 22px;
+      padding: 14px 16px;
+      border-radius: var(--ls-r-md);
+      font-size: 14px; font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      z-index: 2000;
+      animation: toast-in 0.25s ease-out forwards;
+      box-shadow: var(--ls-shadow-pop);
+      pointer-events: none;
+    }
+    .ls-toast[data-type="success"] {
+      background: var(--ls-online-bg);
+      color: var(--ls-online);
+      border: 0.5px solid color-mix(in oklch, var(--ls-online) 25%, transparent);
+    }
+    .ls-toast[data-type="warning"] {
+      background: var(--ls-syncing-bg);
+      color: var(--ls-syncing);
+      border: 0.5px solid color-mix(in oklch, var(--ls-syncing) 25%, transparent);
+    }
+    .ls-toast[data-type="error"] {
+      background: color-mix(in oklch, var(--ls-danger) 12%, var(--ls-surface));
+      color: var(--ls-danger);
+      border: 0.5px solid color-mix(in oklch, var(--ls-danger) 25%, transparent);
+    }
+    @keyframes toast-in {
+      from { transform: translateY(10px); opacity: 0; }
+      to   { transform: translateY(0);   opacity: 1; }
+    }
+
+    /* Offline simulation toggle — dev tool, always visible */
+    #offline-toggle {
+      position: fixed;
+      top: 10px; right: 16px;
+      z-index: 3000;
+      padding: 5px 11px;
+      border-radius: var(--ls-r-pill);
+      font-family: var(--ls-font-mono);
+      font-size: 10px; font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      background: var(--ls-surface);
+      color: var(--ls-ink-4);
+      border: 0.5px solid var(--ls-line);
+      cursor: pointer;
+      box-shadow: var(--ls-shadow-card);
+      transition: color 0.2s;
+    }
+    #offline-toggle.sim-active {
+      color: var(--ls-danger);
+      border-color: color-mix(in oklch, var(--ls-danger) 30%, transparent);
+      background: color-mix(in oklch, var(--ls-danger) 8%, var(--ls-surface));
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       5. SCREEN-SPECIFIC LAYOUT
+    ═══════════════════════════════════════════════════════════ */
+
+    /* — Login — */
+    #screen-login {
+      align-items: stretch;
+      justify-content: center;
+      padding: 0 28px;
+      gap: 0;
+    }
+    .login-logo-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 40px;
+    }
+    .login-logo-mark {
+      width: 56px; height: 56px;
+      border-radius: 16px;
+      background: var(--ls-ink);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+      box-shadow: 0 8px 24px -6px rgba(0,0,0,.4);
+    }
+    .login-wordmark {
+      font-family: var(--ls-font-display);
+      font-size: 28px; font-weight: 700;
+      letter-spacing: -0.03em;
+      color: var(--ls-ink);
+    }
+    .login-sub {
+      font-family: var(--ls-font-mono);
+      font-size: 11px; font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ls-ink-4);
+      margin-top: 4px;
+    }
+    .login-form { display: flex; flex-direction: column; gap: 12px; }
+    .login-field { display: flex; flex-direction: column; }
+    .login-cta-wrap { margin-top: 8px; }
+    .login-footer {
+      text-align: center;
+      margin-top: 32px;
+    }
+
+    /* — Dashboard — */
+    .dash-header { padding: 12px 22px 16px; flex-shrink: 0; }
+    .dash-header-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+    .dash-greeting-block { flex: 1; padding-right: 12px; }
+    .dash-date { margin-bottom: 4px; }
+    .dash-conn-row { display: flex; align-items: center; }
+
+    /* — Delivery — */
+    .delivery-header { padding: 10px 22px 16px; flex-shrink: 0; }
+    .delivery-header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    .delivery-body-inner { padding: 0 22px 0; }
+    .delivery-address-block {
+      margin-bottom: 20px;
+    }
+    .delivery-address-label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+
+    /* — Sync Queue — */
+    .sync-header { padding: 10px 22px 16px; flex-shrink: 0; }
+    .sync-header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    .sync-title-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 4px;
+    }
+    .sync-body-inner { padding: 0 22px 0; }
+
+    /* ─── App container ─── */
+    #app {
+      width: 100%; height: 100%;
+      position: relative;
+      background: var(--ls-bg);
+      max-width: 480px;
+      margin: 0 auto;
+      overflow: hidden;
+    }
+  </style>
 </head>
-<body>
-    
+<body style="background:#0f1119; display:flex; align-items:center; justify-content:center; min-height:100dvh;">
+
+  <!-- Dev tool: always on top -->
+  <button id="offline-toggle">○ Simular Offline</button>
+
+  <!-- Toast container -->
+  <div id="toast-root" aria-live="polite" aria-atomic="true"></div>
+
+  <div id="app">
+
+    <!-- ════════════════════════════════════════════════════
+         ECRÃ 1 — LOGIN
+    ════════════════════════════════════════════════════ -->
+    <section id="screen-login" class="ls-screen">
+
+      <!-- Logo -->
+      <div class="login-logo-wrap">
+        <div class="login-logo-mark">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none"
+               stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 7l9-4 9 4v10l-9 4-9-4V7z"/>
+            <path d="M3 7l9 4 9-4"/>
+            <path d="M12 11v10"/>
+          </svg>
+        </div>
+        <div class="login-wordmark">LogiSync</div>
+        <div class="login-sub">Acesso ao Sistema · Magalu</div>
+      </div>
+
+      <!-- Form -->
+      <form id="login-form" class="login-form" novalidate>
+        <div class="login-field">
+          <label class="ls-label" for="login-email">Email</label>
+          <input
+            id="login-email"
+            class="ls-input"
+            type="email"
+            placeholder="entregador@magalu.com"
+            autocomplete="username"
+            inputmode="email"
+          >
+        </div>
+        <div class="login-field">
+          <label class="ls-label" for="login-password">Senha</label>
+          <input
+            id="login-password"
+            class="ls-input"
+            type="password"
+            placeholder="••••••••"
+            autocomplete="current-password"
+          >
+        </div>
+        <div class="login-cta-wrap">
+          <button type="submit" class="ls-cta">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M5 12h14M13 5l7 7-7 7"/>
+            </svg>
+            Entrar
+          </button>
+        </div>
+      </form>
+
+      <div class="login-footer">
+        <span class="ls-overline">v0.1 · MVP · LogiSync para Magalu</span>
+      </div>
+
+    </section>
+
+
+    <!-- ════════════════════════════════════════════════════
+         ECRÃ 2 — DASHBOARD
+    ════════════════════════════════════════════════════ -->
+    <section id="screen-dash" class="ls-screen" hidden>
+
+      <!-- Status bar -->
+      <div class="ls-statusbar">
+        <span class="statusbar-time">09:00</span>
+        <div class="ls-sb-right">
+          <svg width="16" height="11" viewBox="0 0 16 11" fill="none">
+            <rect x="0"    y="7"   width="3" height="4"   rx="0.5" fill="currentColor"/>
+            <rect x="4.5"  y="5"   width="3" height="6"   rx="0.5" fill="currentColor"/>
+            <rect x="9"    y="2.5" width="3" height="8.5" rx="0.5" fill="currentColor"/>
+            <rect x="13.5" y="0"   width="3" height="11"  rx="0.5" fill="currentColor" opacity=".35"/>
+          </svg>
+          <svg width="24" height="12" viewBox="0 0 24 12" fill="none">
+            <rect x="0.5" y="0.5" width="20" height="11" rx="3" stroke="currentColor" stroke-opacity=".6"/>
+            <rect x="2" y="2" width="14" height="8" rx="1.5" fill="currentColor"/>
+            <rect x="21.5" y="3.5" width="2" height="5" rx="1" fill="currentColor" opacity=".6"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Header -->
+      <div class="dash-header">
+        <div class="dash-header-row">
+          <div class="dash-greeting-block">
+            <div class="dash-date ls-overline">—</div>
+            <div id="dash-greeting" class="ls-display-lg">Bom dia.</div>
+          </div>
+          <div id="dash-avatar" class="user-avatar">?</div>
+        </div>
+        <div class="dash-conn-row">
+          <div class="ls-conn" id="dash-conn" data-state="online">
+            <span class="ls-conn-dot"></span>
+            <span class="conn-label">Conectado</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stats strip -->
+      <div class="stats-strip">
+        <div class="stats-cell">
+          <span class="stats-value"><span id="stat-done">0</span>/<span id="stat-total">5</span></span>
+          <span class="stats-label">Entregues</span>
+        </div>
+        <div class="stats-cell">
+          <span class="stats-value" id="stat-pending">5</span>
+          <span class="stats-label">Pendentes</span>
+        </div>
+        <div class="stats-cell">
+          <span class="stats-value" style="font-size:16px;letter-spacing:-0.01em">SP-07</span>
+          <span class="stats-label">Rota</span>
+        </div>
+      </div>
+
+      <!-- Package list -->
+      <div class="scroll-area" style="padding: 0 22px 8px;">
+        <div id="pkg-card-list"></div>
+      </div>
+
+      <!-- Pinned CTA → Sync Queue -->
+      <div class="pinned-cta">
+        <button class="ls-cta" onclick="showSync()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17 18H7a5 5 0 010-10 6 6 0 0111.5 1.5A4 4 0 0117 18z"/>
+          </svg>
+          <span id="fab-queue-label">Fila de Sync · Vazia</span>
+        </button>
+      </div>
+
+    </section>
+
+
+    <!-- ════════════════════════════════════════════════════
+         ECRÃ 3 — DETALHE / REGISTO DE ENTREGA
+    ════════════════════════════════════════════════════ -->
+    <section id="screen-delivery" class="ls-screen" hidden>
+
+      <!-- Status bar -->
+      <div class="ls-statusbar">
+        <span class="statusbar-time">09:00</span>
+        <div class="ls-sb-right">
+          <svg width="16" height="11" viewBox="0 0 16 11" fill="none">
+            <rect x="0"    y="7"   width="3" height="4"   rx="0.5" fill="currentColor"/>
+            <rect x="4.5"  y="5"   width="3" height="6"   rx="0.5" fill="currentColor"/>
+            <rect x="9"    y="2.5" width="3" height="8.5" rx="0.5" fill="currentColor"/>
+            <rect x="13.5" y="0"   width="3" height="11"  rx="0.5" fill="currentColor" opacity=".35"/>
+          </svg>
+          <svg width="24" height="12" viewBox="0 0 24 12" fill="none">
+            <rect x="0.5" y="0.5" width="20" height="11" rx="3" stroke="currentColor" stroke-opacity=".6"/>
+            <rect x="2" y="2" width="14" height="8" rx="1.5" fill="currentColor"/>
+            <rect x="21.5" y="3.5" width="2" height="5" rx="1" fill="currentColor" opacity=".6"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Header -->
+      <div class="delivery-header">
+        <div class="delivery-header-row">
+          <button class="btn-back" onclick="goToDashboard()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M15 6l-6 6 6 6"/>
+            </svg>
+          </button>
+          <div class="ls-conn" id="del-conn" data-state="online">
+            <span class="ls-conn-dot"></span>
+            <span class="conn-label">Conectado</span>
+          </div>
+          <div style="width:40px"></div>
+        </div>
+        <div id="del-overline" class="ls-overline" style="margin-bottom:8px">Pacote · —</div>
+        <div id="del-priority-badge" class="priority-badge" data-kind="Normal" style="margin-bottom:10px">Normal</div>
+      </div>
+
+      <!-- Body -->
+      <div class="scroll-area">
+        <div class="delivery-body-inner">
+
+          <!-- Address block -->
+          <div class="delivery-address-block">
+            <div class="delivery-address-label">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                   stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"
+                   style="color:var(--ls-ink-3)">
+                <path d="M12 21s-7-7.5-7-12a7 7 0 1114 0c0 4.5-7 12-7 12z"/>
+                <circle cx="12" cy="9" r="2.5"/>
+              </svg>
+              <span class="ls-overline">Endereço de entrega</span>
+            </div>
+            <div id="del-address" class="ls-display-md" style="color:var(--ls-ink);line-height:1.2">—</div>
+            <div id="del-customer-info" class="ls-muted" style="font-size:13px;margin-top:6px">—</div>
+          </div>
+
+          <!-- Info card -->
+          <div class="info-card" style="margin-bottom:20px">
+            <div class="info-row">
+              <span class="info-row-label">Cód. Barras</span>
+              <span id="del-barcode" class="info-row-value">—</span>
+            </div>
+            <div class="info-row">
+              <span class="info-row-label">Peso</span>
+              <span id="del-weight" class="info-row-value">—</span>
+            </div>
+            <div class="info-row">
+              <span class="info-row-label">Distrito</span>
+              <span id="del-district" class="info-row-value">—</span>
+            </div>
+            <div class="info-row">
+              <span class="info-row-label">Prazo</span>
+              <span class="info-row-value" style="color:var(--ls-success)">Hoje até 18:00</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Pinned CTA -->
+      <div class="pinned-cta">
+        <button id="btn-confirm" class="ls-cta" onclick="confirmDelivery()">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 12.5l5 5L20 6"/>
+          </svg>
+          Confirmar Entrega
+        </button>
+      </div>
+
+    </section>
+
+
+    <!-- ════════════════════════════════════════════════════
+         ECRÃ 4 — FILA DE SINCRONIZAÇÃO
+    ════════════════════════════════════════════════════ -->
+    <section id="screen-sync" class="ls-screen" hidden>
+
+      <!-- Status bar -->
+      <div class="ls-statusbar">
+        <span class="statusbar-time">09:00</span>
+        <div class="ls-sb-right">
+          <svg width="16" height="11" viewBox="0 0 16 11" fill="none">
+            <rect x="0"    y="7"   width="3" height="4"   rx="0.5" fill="currentColor"/>
+            <rect x="4.5"  y="5"   width="3" height="6"   rx="0.5" fill="currentColor"/>
+            <rect x="9"    y="2.5" width="3" height="8.5" rx="0.5" fill="currentColor"/>
+            <rect x="13.5" y="0"   width="3" height="11"  rx="0.5" fill="currentColor" opacity=".35"/>
+          </svg>
+          <svg width="24" height="12" viewBox="0 0 24 12" fill="none">
+            <rect x="0.5" y="0.5" width="20" height="11" rx="3" stroke="currentColor" stroke-opacity=".6"/>
+            <rect x="2" y="2" width="14" height="8" rx="1.5" fill="currentColor"/>
+            <rect x="21.5" y="3.5" width="2" height="5" rx="1" fill="currentColor" opacity=".6"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Header -->
+      <div class="sync-header">
+        <div class="sync-header-row">
+          <button class="btn-back" onclick="goToDashboard()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M15 6l-6 6 6 6"/>
+            </svg>
+          </button>
+          <div class="ls-conn" id="sync-conn" data-state="online">
+            <span class="ls-conn-dot"></span>
+            <span class="conn-label">Conectado</span>
+          </div>
+          <div style="width:40px"></div>
+        </div>
+        <div class="ls-overline" style="margin-bottom:6px">Fila local · device://logisync.cache</div>
+        <div class="sync-title-row">
+          <div class="ls-display-lg">Sincronização</div>
+          <span id="queue-count-badge" class="count-badge">0</span>
+        </div>
+      </div>
+
+      <!-- Queue list -->
+      <div class="scroll-area">
+        <div class="sync-body-inner">
+          <div id="queue-item-list"></div>
+
+          <!-- Empty state -->
+          <div id="queue-empty-state" class="empty-state" hidden>
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17 18H7a5 5 0 010-10 6 6 0 0111.5 1.5A4 4 0 0117 18z"/>
+              <path d="M9 12l2 2 4-4"/>
+            </svg>
+            <div class="ls-h2">Fila limpa</div>
+            <div class="ls-muted" style="font-size:13px">Todas as entregas foram sincronizadas com o servidor Magalu.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pinned CTA -->
+      <div class="pinned-cta">
+        <button id="btn-sync" class="ls-cta" onclick="triggerSync()">
+          <svg id="sync-icon" width="20" height="20" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12a9 9 0 11-3-6.7L21 8"/>
+            <path d="M21 3v5h-5"/>
+          </svg>
+          Sincronizar Dados
+        </button>
+      </div>
+
+    </section>
+
+  </div><!-- #app -->
+
+  <!-- ════════════════════════════════════════════════════
+       JAVASCRIPT
+  ════════════════════════════════════════════════════ -->
+  <script>
+    'use strict';
+
+    /* ── LS_DATA — Camada de dados (localStorage) ─────────────── */
+    const LS_DATA = (() => {
+      const DELIVERIES_KEY = 'ls:deliveries';
+      const QUEUE_KEY      = 'ls:syncQueue';
+      const USER_KEY       = 'ls:user';
+
+      const SEED = [
+        { id:'ML-7822-C', address:'Av. Paulista, 1578 — Sala 1102',       customer:'Ana Costa',      district:'Bela Vista',  barcode:'7891234567890', weight:'2.3 kg', priority:'Alta',   status:'pending' },
+        { id:'ML-7823-A', address:'R. Augusta, 456 — Apto 42',            customer:'Carlos Silva',   district:'Consolação',  barcode:'7891234567891', weight:'1.1 kg', priority:'Normal', status:'pending' },
+        { id:'ML-7824-B', address:'Al. Santos, 890 — Cj 51',              customer:'Fernanda Lima',  district:'Jardins',     barcode:'7891234567892', weight:'4.7 kg', priority:'Frágil', status:'pending' },
+        { id:'ML-7825-C', address:'R. Oscar Freire, 123',                  customer:'Roberto Mendes', district:'Pinheiros',   barcode:'7891234567893', weight:'0.8 kg', priority:'Normal', status:'pending' },
+        { id:'ML-7826-A', address:'Av. Brig. Faria Lima, 3144',           customer:'Juliana Souza',  district:'Itaim Bibi',  barcode:'7891234567894', weight:'3.2 kg', priority:'Alta',   status:'pending' },
+      ];
+
+      function _get(key, fallback) {
+        try { return JSON.parse(localStorage.getItem(key)) ?? fallback; }
+        catch { return fallback; }
+      }
+      function _set(key, value) {
+        try { localStorage.setItem(key, JSON.stringify(value)); } catch {}
+      }
+
+      function seed() {
+        if (!localStorage.getItem(DELIVERIES_KEY)) _set(DELIVERIES_KEY, SEED);
+        if (!localStorage.getItem(QUEUE_KEY))      _set(QUEUE_KEY, []);
+      }
+
+      function getDeliveries() { return _get(DELIVERIES_KEY, []); }
+      function getDelivery(id) { return getDeliveries().find(d => d.id === id) || null; }
+
+      function _updateDelivery(id, patch) {
+        const list = getDeliveries();
+        const idx  = list.findIndex(d => d.id === id);
+        if (idx !== -1) { Object.assign(list[idx], patch); _set(DELIVERIES_KEY, list); }
+      }
+
+      function markDelivered(id) { _updateDelivery(id, { status:'delivered', deliveredAt: new Date().toISOString() }); }
+      function markCached(id)    { _updateDelivery(id, { status:'cached' }); }
+
+      function getQueue() { return _get(QUEUE_KEY, []); }
+
+      function addToQueue(id) {
+        const queue    = getQueue();
+        const delivery = getDelivery(id);
+        if (!delivery || queue.find(q => q.id === id)) return;
+        queue.push({
+          id,
+          address:   delivery.address,
+          customer:  delivery.customer,
+          district:  delivery.district,
+          timestamp: new Date().toLocaleTimeString('pt-BR', { hour:'2-digit', minute:'2-digit' }),
+        });
+        _set(QUEUE_KEY, queue);
+      }
+
+      function clearQueue() {
+        getQueue().forEach(q => markDelivered(q.id));
+        _set(QUEUE_KEY, []);
+      }
+
+      function getInitials(email) {
+        const name  = email.split('@')[0];
+        const parts = name.split(/[._\-]/);
+        return parts.length >= 2
+          ? (parts[0][0] + parts[1][0]).toUpperCase()
+          : name.substring(0, 2).toUpperCase();
+      }
+
+      function setUser(email) { _set(USER_KEY, { email, initials: getInitials(email) }); }
+      function getUser()      { return _get(USER_KEY, null); }
+
+      return { seed, getDeliveries, getDelivery, markDelivered, markCached,
+               getQueue, addToQueue, clearQueue, setUser, getUser };
+    })();
+
+
+    /* ── LS_NET — Camada de rede ──────────────────────────────── */
+    const LS_NET = (() => {
+      let _forceOffline = false;
+
+      function isOnline()  { return !_forceOffline && navigator.onLine; }
+
+      function getState() {
+        if (!isOnline()) return 'offline';
+        return LS_DATA.getQueue().length > 0 ? 'syncing' : 'online';
+      }
+
+      function toggleSimulation() {
+        _forceOffline = !_forceOffline;
+        document.dispatchEvent(new CustomEvent('ls:netchange'));
+        return _forceOffline;
+      }
+
+      window.addEventListener('online',  () => { if (!_forceOffline) document.dispatchEvent(new CustomEvent('ls:netchange')); });
+      window.addEventListener('offline', () => { document.dispatchEvent(new CustomEvent('ls:netchange')); });
+
+      return { isOnline, getState, toggleSimulation };
+    })();
+
+
+    /* ── LS_UI — Navegação e UI ───────────────────────────────── */
+    const LS_UI = (() => {
+      const SCREENS = ['screen-login','screen-dash','screen-delivery','screen-sync'];
+
+      function showScreen(id) {
+        SCREENS.forEach(s => {
+          const el = document.getElementById(s);
+          s === id ? el.removeAttribute('hidden') : el.setAttribute('hidden','');
+        });
+      }
+
+      function updateConnRibbons() {
+        const state  = LS_NET.getState();
+        const queue  = LS_DATA.getQueue().length;
+        const labels = {
+          online:  'Conectado',
+          syncing: `Sincronizando · ${queue}`,
+          offline: queue > 0 ? `Offline · ${queue} na fila` : 'Offline',
+        };
+
+        document.querySelectorAll('.ls-conn').forEach(el => {
+          el.dataset.state = state;
+          const lbl = el.querySelector('.conn-label');
+          if (lbl) lbl.textContent = labels[state];
+        });
+
+        const toggle = document.getElementById('offline-toggle');
+        if (toggle) {
+          const simActive = !LS_NET.isOnline() && navigator.onLine;
+          toggle.textContent = simActive ? '● Sim. Offline ON' : '○ Simular Offline';
+          simActive ? toggle.classList.add('sim-active') : toggle.classList.remove('sim-active');
+        }
+
+        // Update FAB label with queue count
+        const fab = document.getElementById('fab-queue-label');
+        if (fab) {
+          fab.textContent = queue > 0
+            ? `Fila de Sync · ${queue} pendente${queue > 1 ? 's' : ''}`
+            : 'Fila de Sync · Vazia';
+        }
+      }
+
+      let _toastTimer = null;
+      function showToast(msg, type = 'success', duration = 3200) {
+        const root = document.getElementById('toast-root');
+        const prev = root.querySelector('.ls-toast');
+        if (prev) prev.remove();
+        if (_toastTimer) clearTimeout(_toastTimer);
+
+        const toast = document.createElement('div');
+        toast.className  = 'ls-toast';
+        toast.dataset.type = type;
+
+        const icon = type === 'success' ? '✓' : type === 'warning' ? '⚠' : '✕';
+        toast.innerHTML = `<strong>${icon}</strong> ${msg}`;
+        root.appendChild(toast);
+
+        _toastTimer = setTimeout(() => {
+          toast.style.opacity    = '0';
+          toast.style.transition = 'opacity 0.2s';
+          setTimeout(() => toast.remove(), 220);
+        }, duration);
+      }
+
+      function startClock() {
+        function tick() {
+          const t = new Date().toLocaleTimeString('pt-BR', { hour:'2-digit', minute:'2-digit' });
+          document.querySelectorAll('.statusbar-time').forEach(el => { el.textContent = t; });
+        }
+        tick();
+        setInterval(tick, 30000);
+      }
+
+      return { showScreen, updateConnRibbons, showToast, startClock };
+    })();
+
+
+    /* ── Renderers ────────────────────────────────────────────── */
+    function renderDashboard() {
+      const deliveries = LS_DATA.getDeliveries();
+      const queue      = LS_DATA.getQueue();
+      const user       = LS_DATA.getUser();
+
+      // Avatar & greeting
+      const avatar = document.getElementById('dash-avatar');
+      if (avatar && user) avatar.textContent = user.initials;
+
+      const greeting = document.getElementById('dash-greeting');
+      if (greeting && user) {
+        const raw  = user.email.split('@')[0].split(/[._\-]/)[0];
+        const name = raw.charAt(0).toUpperCase() + raw.slice(1);
+        const h    = new Date().getHours();
+        const sal  = h < 12 ? 'Bom dia' : h < 18 ? 'Boa tarde' : 'Boa noite';
+        greeting.textContent = `${sal}, ${name}.`;
+      }
+
+      // Date in header
+      const dateEl = document.querySelector('.dash-date');
+      if (dateEl) {
+        dateEl.textContent = new Date().toLocaleDateString('pt-BR', {
+          weekday:'short', day:'numeric', month:'short'
+        });
+      }
+
+      // Stats
+      const delivered = deliveries.filter(d => d.status === 'delivered').length;
+      const cachedN   = deliveries.filter(d => d.status === 'cached').length;
+      const pending   = deliveries.filter(d => d.status === 'pending').length;
+      const el = (id) => document.getElementById(id);
+      if (el('stat-done'))    el('stat-done').textContent    = delivered + cachedN;
+      if (el('stat-total'))   el('stat-total').textContent   = deliveries.length;
+      if (el('stat-pending')) el('stat-pending').textContent = pending;
+
+      // Package cards
+      const container = document.getElementById('pkg-card-list');
+      if (container) {
+        container.innerHTML = deliveries.map((pkg, i) => buildPkgCard(pkg, i + 1)).join('');
+      }
+    }
+
+    function buildPkgCard(pkg, seq) {
+      const isDelivered = pkg.status === 'delivered';
+      const isCached    = pkg.status === 'cached';
+      const isDone      = isDelivered || isCached;
+      const opacityStyle = isDone ? ' style="opacity:0.45"' : '';
+
+      const badgeHTML = `<span class="priority-badge" data-kind="${pkg.priority}">${pkg.priority}</span>`;
+
+      let actionHTML;
+      if (isDelivered) {
+        actionHTML = `
+          <div class="pkg-delivered-row">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 12.5l5 5L20 6"/>
+            </svg>
+            Entregue e sincronizado
+          </div>`;
+      } else if (isCached) {
+        actionHTML = `
+          <div class="pkg-cached-row">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 3l10 18H2L12 3z"/>
+              <path d="M12 10v4"/>
+              <circle cx="12" cy="17.5" r=".8" fill="currentColor"/>
+            </svg>
+            Guardado em cache · aguarda sync
+          </div>`;
+      } else {
+        actionHTML = `
+          <button class="btn-detail" onclick="showDelivery('${pkg.id}')">
+            Ver Detalhes
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M5 12h14M13 5l7 7-7 7"/>
+            </svg>
+          </button>`;
+      }
+
+      return `
+        <div class="pkg-card"${opacityStyle} data-id="${pkg.id}">
+          <div class="pkg-card-top">
+            <div class="pkg-id-row">
+              <div class="pkg-seq-badge">${seq}</div>
+              <span class="ls-mono pkg-code">${pkg.id}</span>
+            </div>
+            ${badgeHTML}
+          </div>
+          <div class="ls-display-md pkg-address">${pkg.address}</div>
+          <div class="pkg-meta">
+            <span class="ls-muted">${pkg.district} · ${pkg.customer}</span>
+            <span class="pkg-weight">${pkg.weight}</span>
+          </div>
+          ${actionHTML}
+        </div>`;
+    }
+
+    let _currentDeliveryId = null;
+
+    function showDelivery(pkgId) {
+      const pkg = LS_DATA.getDelivery(pkgId);
+      if (!pkg || pkg.status !== 'pending') return;
+      _currentDeliveryId = pkgId;
+
+      document.getElementById('del-overline').textContent     = `Pacote · ${pkg.id}`;
+      document.getElementById('del-address').textContent      = pkg.address;
+      document.getElementById('del-customer-info').textContent = `${pkg.customer} · ${pkg.weight} · ${pkg.district}`;
+      document.getElementById('del-barcode').textContent      = pkg.barcode;
+      document.getElementById('del-weight').textContent       = pkg.weight;
+      document.getElementById('del-district').textContent     = pkg.district;
+
+      const badge = document.getElementById('del-priority-badge');
+      badge.textContent    = pkg.priority;
+      badge.dataset.kind   = pkg.priority;
+
+      LS_UI.showScreen('screen-delivery');
+      LS_UI.updateConnRibbons();
+    }
+
+    function renderSyncQueue() {
+      const queue     = LS_DATA.getQueue();
+      const container = document.getElementById('queue-item-list');
+      const emptyEl   = document.getElementById('queue-empty-state');
+      const badge     = document.getElementById('queue-count-badge');
+
+      badge.textContent = queue.length;
+
+      if (queue.length === 0) {
+        container.innerHTML = '';
+        emptyEl.removeAttribute('hidden');
+      } else {
+        emptyEl.setAttribute('hidden', '');
+        container.innerHTML = queue.map(item => `
+          <div class="queue-row" data-id="${item.id}">
+            <div class="queue-row-header">
+              <span class="ls-overline" style="color:var(--ls-offline)">Entrega</span>
+              <span class="ls-mono" style="font-size:11px;color:var(--ls-ink-3)">${item.id}</span>
+              <span class="queue-row-ts">${item.timestamp}</span>
+            </div>
+            <div class="ls-h2 queue-address">${item.address}</div>
+            <div class="ls-muted" style="font-size:13px;margin-top:3px">${item.customer} · ${item.district}</div>
+          </div>`).join('');
+      }
+
+      // Sync button state
+      const syncBtn = document.getElementById('btn-sync');
+      syncBtn.disabled = !LS_NET.isOnline();
+    }
+
+
+    /* ── Action Handlers ──────────────────────────────────────── */
+
+    // Login
+    document.getElementById('login-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const email = document.getElementById('login-email').value.trim();
+      const pass  = document.getElementById('login-password').value;
+      if (!email || !pass) {
+        LS_UI.showToast('Preencha email e senha.', 'error');
+        return;
+      }
+      LS_DATA.setUser(email);
+      renderDashboard();
+      LS_UI.showScreen('screen-dash');
+      LS_UI.updateConnRibbons();
+    });
+
+    // Confirm delivery
+    function confirmDelivery() {
+      const id = _currentDeliveryId;
+      if (!id) return;
+      const pkg = LS_DATA.getDelivery(id);
+      if (!pkg || pkg.status !== 'pending') return;
+
+      if (LS_NET.isOnline()) {
+        LS_DATA.markDelivered(id);
+        LS_UI.showToast('Entrega confirmada e sincronizada com o servidor.', 'success');
+      } else {
+        LS_DATA.markCached(id);
+        LS_DATA.addToQueue(id);
+        LS_UI.showToast('Sem sinal — entrega guardada em cache. Sincronize quando houver rede.', 'warning', 4500);
+      }
+      goToDashboard();
+    }
+
+    // Sync
+    function triggerSync() {
+      if (!LS_NET.isOnline()) {
+        LS_UI.showToast('Sem ligação à rede. Aguarde sinal para sincronizar.', 'error');
+        return;
+      }
+      const queue = LS_DATA.getQueue();
+      if (queue.length === 0) {
+        LS_UI.showToast('Nada a sincronizar. Fila já está vazia.', 'success');
+        return;
+      }
+
+      const btn = document.getElementById('btn-sync');
+      btn.disabled = true;
+      btn.innerHTML = `
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"
+             style="animation:spin 0.8s linear infinite">
+          <path d="M21 12a9 9 0 11-3-6.7L21 8"/><path d="M21 3v5h-5"/>
+        </svg>
+        Sincronizando…`;
+
+      // Forçar ribbons para "syncing"
+      document.querySelectorAll('.ls-conn').forEach(el => {
+        el.dataset.state = 'syncing';
+        const lbl = el.querySelector('.conn-label');
+        if (lbl) lbl.textContent = `Sincronizando · ${queue.length}`;
+      });
+
+      setTimeout(() => {
+        const n = queue.length;
+        LS_DATA.clearQueue();
+
+        btn.disabled = false;
+        btn.innerHTML = `
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12a9 9 0 11-3-6.7L21 8"/><path d="M21 3v5h-5"/>
+          </svg>
+          Sincronizar Dados`;
+
+        renderSyncQueue();
+        LS_UI.updateConnRibbons();
+        LS_UI.showToast(`${n} entrega${n > 1 ? 's' : ''} sincronizada${n > 1 ? 's' : ''} com o servidor Magalu.`, 'success');
+      }, 1800);
+    }
+
+    // Offline toggle
+    document.getElementById('offline-toggle').addEventListener('click', () => {
+      LS_NET.toggleSimulation();
+      LS_UI.updateConnRibbons();
+    });
+
+    // Network events
+    document.addEventListener('ls:netchange', () => {
+      LS_UI.updateConnRibbons();
+      // Re-render sync button state if on sync screen
+      const syncScreen = document.getElementById('screen-sync');
+      if (!syncScreen.hasAttribute('hidden')) {
+        const btn = document.getElementById('btn-sync');
+        if (btn && !btn.disabled) btn.disabled = !LS_NET.isOnline();
+      }
+    });
+
+    // Navigation
+    function goToDashboard() {
+      renderDashboard();
+      LS_UI.showScreen('screen-dash');
+      LS_UI.updateConnRibbons();
+    }
+
+    function showSync() {
+      renderSyncQueue();
+      LS_UI.showScreen('screen-sync');
+      LS_UI.updateConnRibbons();
+    }
+
+
+    /* ── Spin animation ───────────────────────────────────────── */
+    const spinStyle = document.createElement('style');
+    spinStyle.textContent = '@keyframes spin { to { transform: rotate(360deg); } }';
+    document.head.appendChild(spinStyle);
+
+
+    /* ── Boot ─────────────────────────────────────────────────── */
+    document.addEventListener('DOMContentLoaded', () => {
+      LS_DATA.seed();
+      LS_UI.startClock();
+
+      const user = LS_DATA.getUser();
+      if (user) {
+        renderDashboard();
+        LS_UI.showScreen('screen-dash');
+      } else {
+        LS_UI.showScreen('screen-login');
+      }
+      LS_UI.updateConnRibbons();
+
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker
+          .register('./service-worker.js')
+          .catch((err) => console.warn('[SW] Registration failed:', err));
+      }
+    });
+  </script>
 </body>
 </html>

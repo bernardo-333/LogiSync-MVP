@@ -1,0 +1,25 @@
+{
+  "name": "LogiSync",
+  "short_name": "LogiSync",
+  "description": "Gestão de entregas last-mile para Magalu",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0f1119",
+  "theme_color": "#0f1119",
+  "lang": "pt-BR",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='112' fill='%230f1119'/%3E%3Cg stroke='%23f7f8fc' stroke-width='28' stroke-linecap='round' stroke-linejoin='round' fill='none' transform='translate(96,96) scale(13.3)'%3E%3Cpath d='M3 7l9-4 9 4v10l-9 4-9-4V7z'/%3E%3Cpath d='M3 7l9 4 9-4'/%3E%3Cpath d='M12 11v10'/%3E%3C/g%3E%3C/svg%3E",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='112' fill='%230f1119'/%3E%3Cg stroke='%23f7f8fc' stroke-width='28' stroke-linecap='round' stroke-linejoin='round' fill='none' transform='translate(96,96) scale(13.3)'%3E%3Cpath d='M3 7l9-4 9 4v10l-9 4-9-4V7z'/%3E%3Cpath d='M3 7l9 4 9-4'/%3E%3Cpath d='M12 11v10'/%3E%3C/g%3E%3C/svg%3E",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ]
+}
