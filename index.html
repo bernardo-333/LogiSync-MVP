@@ -84,17 +84,17 @@
       --ls-ink-2:          oklch(0.86 0.008 250);
       --ls-ink-3:          oklch(0.66 0.008 250);
       --ls-ink-4:          oklch(0.48 0.008 250);
-      --ls-line:           oklch(0.22 0.008 250);
-      --ls-line-2:         oklch(0.30 0.008 250);
-      --ls-surface:        oklch(0.16 0.010 250);
-      --ls-surface-2:      oklch(0.14 0.010 250);
-      --ls-bg:             oklch(0.10 0.010 250);
+      --ls-line:           oklch(0.28 0.020 255);
+      --ls-line-2:         oklch(0.34 0.020 255);
+      --ls-surface:        oklch(0.20 0.014 255);
+      --ls-surface-2:      oklch(0.18 0.014 255);
+      --ls-bg:             oklch(0.15 0.014 255);
       --ls-primary:        oklch(0.72 0.20 255);
       --ls-primary-soft:   oklch(0.30 0.10 255);
       --ls-online-bg:      oklch(0.25 0.10 150);
       --ls-syncing-bg:     oklch(0.28 0.10 70);
       --ls-offline-bg:     oklch(0.22 0.008 250);
-      --ls-shadow-card:    0 1px 0 rgba(255,255,255,.03), 0 6px 18px -8px rgba(0,0,0,.5);
+      --ls-shadow-card:    0 1px 0 rgba(255,255,255,.04), 0 6px 18px -8px rgba(0,0,0,.4);
       --ls-shadow-cta:     0 1px 0 rgba(255,255,255,.15) inset, 0 8px 20px -6px oklch(0.72 0.20 255 / .50);
       --ls-shadow-pop:     0 12px 40px -8px rgba(0,0,0,.60);
     }
@@ -234,6 +234,7 @@
     .pkg-card {
       background: var(--ls-surface);
       border: 0.5px solid var(--ls-line);
+      border-left: 2px solid var(--ls-primary-soft);
       border-radius: var(--ls-r-lg);
       box-shadow: var(--ls-shadow-card);
       padding: 16px 16px 14px;
@@ -253,7 +254,7 @@
       background: var(--ls-line);
       font-family: var(--ls-font-mono);
       font-size: 12px; font-weight: 700;
-      color: var(--ls-ink-2);
+      color: var(--ls-primary);
       display: flex; align-items: center; justify-content: center;
       flex-shrink: 0;
     }
@@ -368,19 +369,19 @@
     /* Stats strip */
     .stats-strip {
       display: flex;
-      margin: 0 22px 20px;
+      margin: 0 22px 8px;
       background: var(--ls-surface);
       border-radius: var(--ls-r-md);
       border: 0.5px solid var(--ls-line);
       box-shadow: var(--ls-shadow-card);
     }
-    .stats-cell { flex: 1; padding: 12px 14px; }
+    .stats-cell { flex: 1; padding: 7px 12px; }
     .stats-cell:not(:last-child) { border-right: 0.5px solid var(--ls-line); }
     .stats-value {
       font-family: var(--ls-font-display);
-      font-size: 22px; font-weight: 600;
+      font-size: 17px; font-weight: 700;
       letter-spacing: -0.02em;
-      color: var(--ls-ink);
+      color: var(--ls-primary);
       display: block;
     }
     .stats-label {
@@ -656,6 +657,254 @@
       margin: 0 auto;
       overflow: hidden;
     }
+
+    /* ═══════════════════════════════════════════════════════════
+       6. NOVAS FEATURES — Filtros, Admin, Scanner, Mapas, Estoquista
+    ═══════════════════════════════════════════════════════════ */
+
+    /* Route val in âmbar */
+    #stat-route-val { color: var(--ls-accent) !important; }
+
+    /* Filter tabs */
+    .filter-tabs {
+      display: flex;
+      gap: 8px;
+      padding: 8px 22px 14px;
+      flex-shrink: 0;
+    }
+    .filter-tab {
+      padding: 5px 14px;
+      border-radius: var(--ls-r-pill);
+      background: var(--ls-surface);
+      border: 0.5px solid var(--ls-line);
+      color: var(--ls-ink-3);
+      font-size: 12px;
+      font-weight: 500;
+      font-family: var(--ls-font-mono);
+      letter-spacing: 0.03em;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s, border-color 0.15s;
+      white-space: nowrap;
+    }
+    .filter-tab.active {
+      background: var(--ls-primary-soft);
+      border-color: var(--ls-primary);
+      color: var(--ls-primary);
+    }
+
+    /* Maps button */
+    .btn-maps {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 10px;
+      padding: 7px 14px;
+      border-radius: var(--ls-r-pill);
+      border: 1px solid var(--ls-primary);
+      background: color-mix(in oklch, var(--ls-primary) 10%, transparent);
+      color: var(--ls-primary);
+      font-size: 13px;
+      font-weight: 500;
+      font-family: var(--ls-font-body);
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .btn-maps:active { background: color-mix(in oklch, var(--ls-primary) 22%, transparent); }
+
+    /* Scan button in delivery header */
+    .btn-scan-header {
+      width: 40px; height: 40px;
+      border-radius: 12px;
+      border: 0.5px solid var(--ls-primary);
+      background: color-mix(in oklch, var(--ls-primary) 12%, transparent);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      color: var(--ls-primary);
+      flex-shrink: 0;
+      transition: background 0.15s;
+    }
+    .btn-scan-header:active { background: color-mix(in oklch, var(--ls-primary) 25%, transparent); }
+
+    /* Admin panel overlay */
+    #admin-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.65);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      z-index: 5000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    #admin-modal {
+      background: var(--ls-surface);
+      border: 0.5px solid var(--ls-line-2);
+      border-radius: var(--ls-r-xl);
+      padding: 28px 24px;
+      width: 100%;
+      max-width: 340px;
+      box-shadow: var(--ls-shadow-pop);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .admin-title {
+      font-family: var(--ls-font-display);
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--ls-ink);
+      letter-spacing: -0.01em;
+    }
+    .admin-subtitle {
+      font-family: var(--ls-font-mono);
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--ls-ink-4);
+      margin-top: -4px;
+      margin-bottom: 4px;
+    }
+    .btn-admin {
+      width: 100%;
+      height: 48px;
+      border-radius: var(--ls-r-md);
+      border: 0.5px solid var(--ls-line);
+      background: var(--ls-surface-2);
+      color: var(--ls-ink-2);
+      font-family: var(--ls-font-body);
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: background 0.15s;
+    }
+    .btn-admin:active { background: var(--ls-line); }
+    .btn-admin.danger {
+      color: var(--ls-danger);
+      border-color: color-mix(in oklch, var(--ls-danger) 30%, transparent);
+      background: color-mix(in oklch, var(--ls-danger) 8%, var(--ls-surface));
+    }
+    .btn-admin-divider {
+      height: 0.5px;
+      background: var(--ls-line);
+      margin: 2px 0;
+    }
+
+    /* Scanner overlay */
+    #scanner-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.96);
+      z-index: 5000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 22px;
+    }
+    .scanner-label {
+      font-family: var(--ls-font-mono);
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.35);
+    }
+    .scanner-frame {
+      width: 260px;
+      height: 160px;
+      border: 2px solid var(--ls-primary);
+      border-radius: 16px;
+      position: relative;
+      overflow: hidden;
+    }
+    .scanner-frame::before, .scanner-frame::after {
+      content: '';
+      position: absolute;
+      width: 22px; height: 22px;
+      border-color: var(--ls-accent);
+      border-style: solid;
+    }
+    .scanner-frame::before { top: -2px; left: -2px; border-width: 3px 0 0 3px; border-radius: 14px 0 0 0; }
+    .scanner-frame::after  { bottom: -2px; right: -2px; border-width: 0 3px 3px 0; border-radius: 0 0 14px 0; }
+    .scanner-line {
+      position: absolute;
+      left: 0; right: 0;
+      height: 2px;
+      background: var(--ls-primary);
+      box-shadow: 0 0 12px 4px color-mix(in oklch, var(--ls-primary) 55%, transparent);
+      animation: scan-sweep 1.4s ease-in-out infinite;
+    }
+    @keyframes scan-sweep {
+      0%   { top: 0; }
+      50%  { top: calc(100% - 2px); }
+      100% { top: 0; }
+    }
+    .scanner-hint {
+      color: rgba(255,255,255,0.65);
+      font-size: 14px;
+      font-family: var(--ls-font-body);
+      text-align: center;
+      max-width: 240px;
+    }
+    .btn-scan-cancel {
+      padding: 10px 28px;
+      border-radius: var(--ls-r-pill);
+      border: 1px solid rgba(255,255,255,0.2);
+      background: transparent;
+      color: rgba(255,255,255,0.55);
+      font-size: 14px;
+      font-family: var(--ls-font-body);
+      cursor: pointer;
+      transition: border-color 0.15s, color 0.15s;
+    }
+    .btn-scan-cancel:active { border-color: rgba(255,255,255,0.4); color: rgba(255,255,255,0.8); }
+
+    /* Stockist toggle on login */
+    .stockist-toggle {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 2px 2px;
+      font-size: 13px;
+      color: var(--ls-ink-3);
+      cursor: pointer;
+      font-family: var(--ls-font-body);
+      user-select: none;
+    }
+    .stockist-toggle input[type="checkbox"] {
+      width: 18px; height: 18px;
+      accent-color: var(--ls-primary);
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    /* Stockist mode CSS overrides (applied to body) */
+    .mode-stockist {
+      --ls-primary:      oklch(0.65 0.18 220);
+      --ls-primary-soft: oklch(0.28 0.10 220);
+      --ls-shadow-cta:   0 1px 0 rgba(255,255,255,.15) inset, 0 8px 20px -6px oklch(0.65 0.18 220 / .50);
+    }
+    .mode-stockist-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 8px;
+      background: color-mix(in oklch, var(--ls-accent) 20%, transparent);
+      border: 0.5px solid color-mix(in oklch, var(--ls-accent) 40%, transparent);
+      border-radius: var(--ls-r-pill);
+      font-family: var(--ls-font-mono);
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--ls-accent);
+      margin-left: 8px;
+    }
   </style>
 </head>
 <body style="background:#0f1119; display:flex; align-items:center; justify-content:center; min-height:100dvh;">
@@ -710,6 +959,10 @@
             autocomplete="current-password"
           >
         </div>
+        <label class="stockist-toggle">
+          <input type="checkbox" id="chk-stockist">
+          <span>Entrar como Estoquista (Magalu)</span>
+        </label>
         <div class="login-cta-wrap">
           <button type="submit" class="ls-cta">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
@@ -779,9 +1032,16 @@
           <span class="stats-label">Pendentes</span>
         </div>
         <div class="stats-cell">
-          <span class="stats-value" style="font-size:16px;letter-spacing:-0.01em">SP-07</span>
+          <span class="stats-value" id="stat-route-val" style="font-size:16px;letter-spacing:-0.01em">SP-07</span>
           <span class="stats-label">Rota</span>
         </div>
+      </div>
+
+      <!-- Filter tabs -->
+      <div class="filter-tabs" id="filter-tabs">
+        <button class="filter-tab active" data-filter="all">Todos</button>
+        <button class="filter-tab" data-filter="pending">Pendentes</button>
+        <button class="filter-tab" data-filter="done">Entregues</button>
       </div>
 
       <!-- Package list -->
@@ -839,7 +1099,16 @@
             <span class="ls-conn-dot"></span>
             <span class="conn-label">Conectado</span>
           </div>
-          <div style="width:40px"></div>
+          <button class="btn-scan-header" id="btn-scan" title="Escanear código de barras">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="4" width="4" height="16" rx="0.8"/>
+              <rect x="8" y="4" width="2" height="16" rx="0.8"/>
+              <rect x="12" y="4" width="1" height="16" rx="0.8"/>
+              <rect x="15" y="4" width="3" height="16" rx="0.8"/>
+              <rect x="20" y="4" width="2" height="16" rx="0.8"/>
+            </svg>
+          </button>
         </div>
         <div id="del-overline" class="ls-overline" style="margin-bottom:8px">Pacote · —</div>
         <div id="del-priority-badge" class="priority-badge" data-kind="Normal" style="margin-bottom:10px">Normal</div>
@@ -862,6 +1131,14 @@
             </div>
             <div id="del-address" class="ls-display-md" style="color:var(--ls-ink);line-height:1.2">—</div>
             <div id="del-customer-info" class="ls-muted" style="font-size:13px;margin-top:6px">—</div>
+            <button class="btn-maps" id="btn-maps">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+                   stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 21s-7-7.5-7-12a7 7 0 1114 0c0 4.5-7 12-7 12z"/>
+                <circle cx="12" cy="9" r="2.5"/>
+              </svg>
+              Abrir no Google Maps
+            </button>
           </div>
 
           <!-- Info card -->
@@ -980,6 +1257,46 @@
 
   </div><!-- #app -->
 
+  <!-- ════ Admin Panel Overlay ════ -->
+  <div id="admin-overlay" hidden>
+    <div id="admin-modal">
+      <div class="admin-title">Painel Admin</div>
+      <div class="admin-subtitle">LogiSync · Modo Apresentação</div>
+      <button class="btn-admin danger" id="btn-admin-reset">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 12a9 9 0 1018 0 9 9 0 00-18 0"/><path d="M3 3l18 18"/>
+        </svg>
+        Resetar App (limpar dados)
+      </button>
+      <div class="btn-admin-divider"></div>
+      <button class="btn-admin" id="btn-admin-route1">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 000 4h6a2 2 0 000-4M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+        </svg>
+        Carregar Rota Simples (3 itens)
+      </button>
+      <button class="btn-admin" id="btn-admin-route2">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 000 4h6a2 2 0 000-4M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+          <path d="M9 12l2 2 4-4"/>
+        </svg>
+        Carregar Rota Complexa (10 itens)
+      </button>
+      <div class="btn-admin-divider"></div>
+      <button class="btn-admin" id="btn-admin-close">Fechar</button>
+    </div>
+  </div>
+
+  <!-- ════ Scanner Overlay ════ -->
+  <div id="scanner-overlay" hidden>
+    <span class="scanner-label">LogiSync · Leitor de Código</span>
+    <div class="scanner-frame">
+      <div class="scanner-line"></div>
+    </div>
+    <p class="scanner-hint">Aponte para o código de barras do pacote</p>
+    <button class="btn-scan-cancel" id="btn-scan-cancel">Cancelar</button>
+  </div>
+
   <!-- ════════════════════════════════════════════════════
        JAVASCRIPT
   ════════════════════════════════════════════════════ -->
@@ -1054,7 +1371,7 @@
           : name.substring(0, 2).toUpperCase();
       }
 
-      function setUser(email) { _set(USER_KEY, { email, initials: getInitials(email) }); }
+      function setUser(email, mode = 'delivery') { _set(USER_KEY, { email, initials: getInitials(email), mode }); }
       function getUser()      { return _get(USER_KEY, null); }
 
       return { seed, getDeliveries, getDelivery, markDelivered, markCached,
@@ -1163,6 +1480,20 @@
     })();
 
 
+    /* ── Filter state ────────────────────────────────────────── */
+    let _activeFilter = 'all';
+
+    function _applyCurrentFilter() {
+      document.querySelectorAll('#pkg-card-list .pkg-card').forEach(card => {
+        const s = card.dataset.status;
+        let visible = true;
+        if (_activeFilter === 'pending') visible = s === 'pending';
+        else if (_activeFilter === 'done') visible = s === 'delivered' || s === 'cached';
+        card.style.display = visible ? '' : 'none';
+      });
+    }
+
+
     /* ── Renderers ────────────────────────────────────────────── */
     function renderDashboard() {
       const deliveries = LS_DATA.getDeliveries();
@@ -1204,6 +1535,19 @@
       if (container) {
         container.innerHTML = deliveries.map((pkg, i) => buildPkgCard(pkg, i + 1)).join('');
       }
+
+      // Stockist mode overrides
+      if (user && user.mode === 'stockist') {
+        document.body.classList.add('mode-stockist');
+        if (greeting) greeting.textContent = 'Recebimento de Carga.';
+        const routeVal = document.getElementById('stat-route-val');
+        if (routeVal) routeVal.textContent = 'CD-REC';
+      } else {
+        document.body.classList.remove('mode-stockist');
+      }
+
+      // Re-apply active filter to newly rendered cards
+      _applyCurrentFilter();
     }
 
     function buildPkgCard(pkg, seq) {
@@ -1247,7 +1591,7 @@
       }
 
       return `
-        <div class="pkg-card"${opacityStyle} data-id="${pkg.id}">
+        <div class="pkg-card"${opacityStyle} data-id="${pkg.id}" data-status="${pkg.status}">
           <div class="pkg-card-top">
             <div class="pkg-id-row">
               <div class="pkg-seq-badge">${seq}</div>
@@ -1284,6 +1628,11 @@
 
       LS_UI.showScreen('screen-delivery');
       LS_UI.updateConnRibbons();
+
+      const mapsBtn = document.getElementById('btn-maps');
+      if (mapsBtn) mapsBtn.onclick = () => openMaps(pkg.address);
+      const scanBtn = document.getElementById('btn-scan');
+      if (scanBtn) scanBtn.onclick = openScanner;
     }
 
     function renderSyncQueue() {
@@ -1328,7 +1677,8 @@
         LS_UI.showToast('Preencha email e senha.', 'error');
         return;
       }
-      LS_DATA.setUser(email);
+      const isStockist = document.getElementById('chk-stockist').checked;
+      LS_DATA.setUser(email, isStockist ? 'stockist' : 'delivery');
       renderDashboard();
       LS_UI.showScreen('screen-dash');
       LS_UI.updateConnRibbons();
@@ -1418,6 +1768,10 @@
 
     // Navigation
     function goToDashboard() {
+      _activeFilter = 'all';
+      document.querySelectorAll('.filter-tab').forEach(b => {
+        b.classList.toggle('active', b.dataset.filter === 'all');
+      });
       renderDashboard();
       LS_UI.showScreen('screen-dash');
       LS_UI.updateConnRibbons();
@@ -1436,6 +1790,149 @@
     document.head.appendChild(spinStyle);
 
 
+    /* ── Admin Panel ──────────────────────────────────────────── */
+    const ADMIN_ROUTE_SIMPLE = [
+      { id:'ML-S001-A', address:'Av. Paulista, 1578 — Sala 1102', customer:'Ana Costa', district:'Bela Vista', barcode:'7891000100001', weight:'2.3 kg', priority:'Alta', status:'pending' },
+      { id:'ML-S002-B', address:'R. Augusta, 456 — Apto 42', customer:'Carlos Silva', district:'Consolação', barcode:'7891000100002', weight:'1.1 kg', priority:'Normal', status:'pending' },
+      { id:'ML-S003-C', address:'Al. Santos, 890 — Cj 51', customer:'Fernanda Lima', district:'Jardins', barcode:'7891000100003', weight:'4.7 kg', priority:'Frágil', status:'pending' },
+    ];
+
+    const ADMIN_ROUTE_COMPLEX = [
+      { id:'ML-C001-A', address:'Av. Paulista, 1578', customer:'Ana Costa', district:'Bela Vista', barcode:'7891000200001', weight:'2.3 kg', priority:'Alta', status:'delivered', deliveredAt: new Date().toISOString() },
+      { id:'ML-C002-B', address:'R. Augusta, 456 — Apto 42', customer:'Carlos Silva', district:'Consolação', barcode:'7891000200002', weight:'1.1 kg', priority:'Normal', status:'delivered', deliveredAt: new Date().toISOString() },
+      { id:'ML-C003-C', address:'Al. Santos, 890 — Cj 51', customer:'Fernanda Lima', district:'Jardins', barcode:'7891000200003', weight:'4.7 kg', priority:'Frágil', status:'cached' },
+      { id:'ML-C004-A', address:'R. Oscar Freire, 123', customer:'Roberto Mendes', district:'Pinheiros', barcode:'7891000200004', weight:'0.8 kg', priority:'Normal', status:'pending' },
+      { id:'ML-C005-B', address:'Av. Faria Lima, 3144', customer:'Juliana Souza', district:'Itaim Bibi', barcode:'7891000200005', weight:'3.2 kg', priority:'Alta', status:'pending' },
+      { id:'ML-C006-C', address:'R. Haddock Lobo, 595', customer:'Marcos Oliveira', district:'Cerqueira César', barcode:'7891000200006', weight:'1.5 kg', priority:'Normal', status:'pending' },
+      { id:'ML-C007-A', address:'R. da Consolação, 2302', customer:'Beatriz Ramos', district:'Consolação', barcode:'7891000200007', weight:'6.0 kg', priority:'Frágil', status:'pending' },
+      { id:'ML-C008-B', address:'Av. Rebouças, 1144', customer:'Diego Ferreira', district:'Pinheiros', barcode:'7891000200008', weight:'0.5 kg', priority:'Normal', status:'pending' },
+      { id:'ML-C009-C', address:'R. Teodoro Sampaio, 744', customer:'Priya Sharma', district:'Pinheiros', barcode:'7891000200009', weight:'2.1 kg', priority:'Alta', status:'pending' },
+      { id:'ML-C010-A', address:'Av. Brasil, 500', customer:'Lucas Nunes', district:'Perdizes', barcode:'7891000200010', weight:'3.8 kg', priority:'Normal', status:'pending' },
+    ];
+
+    function openAdminPanel() {
+      document.getElementById('admin-overlay').removeAttribute('hidden');
+    }
+    function closeAdminPanel() {
+      document.getElementById('admin-overlay').setAttribute('hidden', '');
+    }
+    function adminReset() {
+      closeAdminPanel();
+      localStorage.clear();
+      location.reload();
+    }
+    function adminLoadRoute(deliveries) {
+      closeAdminPanel();
+      localStorage.clear();
+      try {
+        localStorage.setItem('ls:deliveries', JSON.stringify(deliveries));
+        const cached = deliveries.filter(d => d.status === 'cached');
+        const queue = cached.map(d => ({
+          id: d.id, address: d.address, customer: d.customer, district: d.district,
+          timestamp: new Date().toLocaleTimeString('pt-BR', { hour:'2-digit', minute:'2-digit' }),
+        }));
+        localStorage.setItem('ls:syncQueue', JSON.stringify(queue));
+      } catch(e) {}
+      if (!LS_DATA.getUser()) LS_DATA.setUser('entregador@magalu.com');
+      renderDashboard();
+      LS_UI.showScreen('screen-dash');
+      LS_UI.updateConnRibbons();
+    }
+
+    let _adminLongPressTimer = null;
+    function _startAdminTimer() {
+      _adminLongPressTimer = setTimeout(openAdminPanel, 900);
+    }
+    function _cancelAdminTimer() {
+      if (_adminLongPressTimer) { clearTimeout(_adminLongPressTimer); _adminLongPressTimer = null; }
+    }
+
+    let _avatarTapCount = 0, _avatarTapTimer = null;
+    function _onAvatarTap() {
+      _avatarTapCount++;
+      if (_avatarTapTimer) clearTimeout(_avatarTapTimer);
+      if (_avatarTapCount >= 3) { _avatarTapCount = 0; openAdminPanel(); return; }
+      _avatarTapTimer = setTimeout(() => { _avatarTapCount = 0; }, 700);
+    }
+
+    function setupAdminPanel() {
+      const logo = document.querySelector('.login-logo-wrap');
+      if (logo) {
+        logo.addEventListener('mousedown',   _startAdminTimer);
+        logo.addEventListener('touchstart',  _startAdminTimer, { passive: true });
+        logo.addEventListener('mouseup',     _cancelAdminTimer);
+        logo.addEventListener('mouseleave',  _cancelAdminTimer);
+        logo.addEventListener('touchend',    _cancelAdminTimer);
+        logo.addEventListener('touchcancel', _cancelAdminTimer);
+        logo.addEventListener('contextmenu', e => e.preventDefault());
+      }
+      const avatar = document.getElementById('dash-avatar');
+      if (avatar) avatar.addEventListener('click', _onAvatarTap);
+
+      document.getElementById('btn-admin-reset').addEventListener('click', adminReset);
+      document.getElementById('btn-admin-route1').addEventListener('click', () => adminLoadRoute(ADMIN_ROUTE_SIMPLE));
+      document.getElementById('btn-admin-route2').addEventListener('click', () => adminLoadRoute(ADMIN_ROUTE_COMPLEX));
+      document.getElementById('btn-admin-close').addEventListener('click', closeAdminPanel);
+      document.getElementById('admin-overlay').addEventListener('click', e => {
+        if (e.target === document.getElementById('admin-overlay')) closeAdminPanel();
+      });
+    }
+
+
+    /* ── Filter Tabs ──────────────────────────────────────────── */
+    function setupFilterTabs() {
+      document.querySelectorAll('.filter-tab').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          _activeFilter = btn.dataset.filter;
+          _applyCurrentFilter();
+        });
+      });
+    }
+
+
+    /* ── Scanner ──────────────────────────────────────────────── */
+    let _scanTimer = null;
+
+    function openScanner() {
+      document.getElementById('scanner-overlay').removeAttribute('hidden');
+      _scanTimer = setTimeout(() => {
+        _beep();
+        closeScanner();
+        confirmDelivery();
+      }, 2000);
+    }
+    function closeScanner() {
+      document.getElementById('scanner-overlay').setAttribute('hidden', '');
+      if (_scanTimer) { clearTimeout(_scanTimer); _scanTimer = null; }
+    }
+    function _beep() {
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.frequency.value = 880;
+        osc.type = 'sine';
+        gain.gain.setValueAtTime(0.3, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.13);
+        osc.start(ctx.currentTime);
+        osc.stop(ctx.currentTime + 0.13);
+      } catch(e) {}
+    }
+
+
+    /* ── Maps ─────────────────────────────────────────────────── */
+    function openMaps(address) {
+      window.open(
+        'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(address + ', São Paulo, SP'),
+        '_blank'
+      );
+    }
+
+
     /* ── Boot ─────────────────────────────────────────────────── */
     document.addEventListener('DOMContentLoaded', () => {
       LS_DATA.seed();
@@ -1449,6 +1946,9 @@
         LS_UI.showScreen('screen-login');
       }
       LS_UI.updateConnRibbons();
+      setupAdminPanel();
+      setupFilterTabs();
+      document.getElementById('btn-scan-cancel').addEventListener('click', closeScanner);
 
       if ('serviceWorker' in navigator) {
         navigator.serviceWorker
