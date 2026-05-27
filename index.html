@@ -350,7 +350,26 @@
       color: var(--ls-ink-2);
       display: flex; align-items: center; justify-content: center;
       flex-shrink: 0;
+      cursor: pointer;
+      border: 1.5px solid var(--ls-line-2);
+      transition: border-color 0.15s, background 0.15s;
     }
+    .user-avatar:active { background: var(--ls-surface-2); border-color: var(--ls-primary); }
+
+    /* Logout button */
+    .btn-logout {
+      display: flex; align-items: center; gap: 6px;
+      padding: 8px 14px;
+      background: transparent;
+      border: 1px solid var(--ls-border, var(--ls-line));
+      border-radius: var(--ls-r-pill);
+      font-size: 13px; font-weight: 600;
+      color: var(--ls-ink-3);
+      cursor: pointer;
+      font-family: var(--ls-font-body);
+      transition: background 0.15s, color 0.15s;
+    }
+    .btn-logout:active { background: var(--ls-surface-2); color: var(--ls-ink); }
 
     /* Back button */
     .btn-back {
@@ -692,24 +711,55 @@
       color: var(--ls-primary);
     }
 
-    /* Maps button */
-    .btn-maps {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      margin-top: 10px;
-      padding: 7px 14px;
-      border-radius: var(--ls-r-pill);
-      border: 1px solid var(--ls-primary);
-      background: color-mix(in oklch, var(--ls-primary) 10%, transparent);
-      color: var(--ls-primary);
-      font-size: 13px;
-      font-weight: 500;
-      font-family: var(--ls-font-body);
+    /* Map preview card */
+    .map-preview {
+      display: block;
+      position: relative;
+      margin-top: 14px;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid var(--ls-line);
       cursor: pointer;
-      transition: background 0.15s;
+      height: 118px;
+      background: var(--ls-surface-2);
+      -webkit-tap-highlight-color: transparent;
+      transition: opacity 0.15s;
     }
-    .btn-maps:active { background: color-mix(in oklch, var(--ls-primary) 22%, transparent); }
+    .map-preview:active { opacity: 0.75; }
+    .map-bg {
+      position: absolute; inset: 0;
+      background: oklch(0.20 0.008 240);
+      overflow: hidden;
+    }
+    .map-grid {
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(oklch(0.30 0.01 240) 1px, transparent 1px),
+        linear-gradient(90deg, oklch(0.30 0.01 240) 1px, transparent 1px),
+        linear-gradient(oklch(0.26 0.012 240) 3px, transparent 3px),
+        linear-gradient(90deg, oklch(0.26 0.012 240) 3px, transparent 3px);
+      background-size: 22px 22px, 22px 22px, 88px 88px, 88px 88px;
+    }
+    .map-pin {
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -65%);
+      filter: drop-shadow(0 3px 8px rgba(0,0,0,.6));
+    }
+    .map-label {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      display: flex; align-items: center; gap: 6px;
+      padding: 7px 12px;
+      background: var(--ls-surface);
+      font-size: 12px; font-weight: 500;
+      color: var(--ls-ink-2);
+      font-family: var(--ls-font-body);
+      border-top: 1px solid var(--ls-line);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .map-label-text {
+      flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .map-ext-icon { opacity: 0.4; flex-shrink: 0; }
 
     /* Scan button in delivery header */
     .btn-scan-header {
@@ -865,25 +915,6 @@
     }
     .btn-scan-cancel:active { border-color: rgba(255,255,255,0.4); color: rgba(255,255,255,0.8); }
 
-    /* Stockist toggle on login */
-    .stockist-toggle {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px 2px 2px;
-      font-size: 13px;
-      color: var(--ls-ink-3);
-      cursor: pointer;
-      font-family: var(--ls-font-body);
-      user-select: none;
-    }
-    .stockist-toggle input[type="checkbox"] {
-      width: 18px; height: 18px;
-      accent-color: var(--ls-primary);
-      cursor: pointer;
-      flex-shrink: 0;
-    }
-
     /* Stockist mode CSS overrides (applied to body) */
     .mode-stockist {
       --ls-primary:      oklch(0.65 0.18 220);
@@ -959,10 +990,6 @@
             autocomplete="current-password"
           >
         </div>
-        <label class="stockist-toggle">
-          <input type="checkbox" id="chk-stockist">
-          <span>Entrar como Estoquista (Magalu)</span>
-        </label>
         <div class="login-cta-wrap">
           <button type="submit" class="ls-cta">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
@@ -1011,7 +1038,18 @@
             <div class="dash-date ls-overline">—</div>
             <div id="dash-greeting" class="ls-display-lg">Bom dia.</div>
           </div>
-          <div id="dash-avatar" class="user-avatar">?</div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <button id="btn-logout" class="btn-logout" onclick="adminReset()" title="Sair">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                   stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/>
+                <polyline points="16 17 21 12 16 7"/>
+                <line x1="21" y1="12" x2="9" y2="12"/>
+              </svg>
+              Sair
+            </button>
+            <div id="dash-avatar" class="user-avatar">?</div>
+          </div>
         </div>
         <div class="dash-conn-row">
           <div class="ls-conn" id="dash-conn" data-state="online">
@@ -1099,16 +1137,6 @@
             <span class="ls-conn-dot"></span>
             <span class="conn-label">Conectado</span>
           </div>
-          <button class="btn-scan-header" id="btn-scan" title="Escanear código de barras">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
-                 stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="2" y="4" width="4" height="16" rx="0.8"/>
-              <rect x="8" y="4" width="2" height="16" rx="0.8"/>
-              <rect x="12" y="4" width="1" height="16" rx="0.8"/>
-              <rect x="15" y="4" width="3" height="16" rx="0.8"/>
-              <rect x="20" y="4" width="2" height="16" rx="0.8"/>
-            </svg>
-          </button>
         </div>
         <div id="del-overline" class="ls-overline" style="margin-bottom:8px">Pacote · —</div>
         <div id="del-priority-badge" class="priority-badge" data-kind="Normal" style="margin-bottom:10px">Normal</div>
@@ -1131,14 +1159,33 @@
             </div>
             <div id="del-address" class="ls-display-md" style="color:var(--ls-ink);line-height:1.2">—</div>
             <div id="del-customer-info" class="ls-muted" style="font-size:13px;margin-top:6px">—</div>
-            <button class="btn-maps" id="btn-maps">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
-                   stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M12 21s-7-7.5-7-12a7 7 0 1114 0c0 4.5-7 12-7 12z"/>
-                <circle cx="12" cy="9" r="2.5"/>
-              </svg>
-              Abrir no Google Maps
-            </button>
+            <div class="map-preview" id="map-preview" title="Abrir no Google Maps">
+              <div class="map-bg">
+                <div class="map-grid"></div>
+                <div class="map-pin">
+                  <svg width="24" height="30" viewBox="0 0 24 30" fill="none">
+                    <path d="M12 1C6.48 1 2 5.48 2 11c0 7.75 10 19 10 19s10-11.25 10-19c0-5.52-4.48-10-10-10z"
+                          fill="var(--ls-primary)" stroke="white" stroke-width="1.2"/>
+                    <circle cx="12" cy="11" r="4" fill="white"/>
+                  </svg>
+                </div>
+              </div>
+              <div class="map-label">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none"
+                     stroke="var(--ls-primary)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
+                     style="flex-shrink:0">
+                  <path d="M12 21s-7-7.5-7-12a7 7 0 1114 0c0 4.5-7 12-7 12z"/>
+                  <circle cx="12" cy="9" r="2.5"/>
+                </svg>
+                <span class="map-label-text" id="map-address-label">—</span>
+                <svg class="map-ext-icon" width="11" height="11" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/>
+                  <polyline points="15 3 21 3 21 9"/>
+                  <line x1="10" y1="14" x2="21" y2="3"/>
+                </svg>
+              </div>
+            </div>
           </div>
 
           <!-- Info card -->
@@ -1166,12 +1213,16 @@
 
       <!-- Pinned CTA -->
       <div class="pinned-cta">
-        <button id="btn-confirm" class="ls-cta" onclick="confirmDelivery()">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
-               stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M4 12.5l5 5L20 6"/>
+        <button id="btn-confirm" class="ls-cta" onclick="openScanner()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="4" width="4" height="16" rx="0.8"/>
+            <rect x="8" y="4" width="2" height="16" rx="0.8"/>
+            <rect x="12" y="4" width="1" height="16" rx="0.8"/>
+            <rect x="15" y="4" width="3" height="16" rx="0.8"/>
+            <rect x="20" y="4" width="2" height="16" rx="0.8"/>
           </svg>
-          Confirmar Entrega
+          Scannear e Confirmar
         </button>
       </div>
 
@@ -1629,10 +1680,11 @@
       LS_UI.showScreen('screen-delivery');
       LS_UI.updateConnRibbons();
 
-      const mapsBtn = document.getElementById('btn-maps');
-      if (mapsBtn) mapsBtn.onclick = () => openMaps(pkg.address);
-      const scanBtn = document.getElementById('btn-scan');
-      if (scanBtn) scanBtn.onclick = openScanner;
+      const mapPreview = document.getElementById('map-preview');
+      if (mapPreview) {
+        document.getElementById('map-address-label').textContent = pkg.address;
+        mapPreview.onclick = () => openMaps(pkg.address);
+      }
     }
 
     function renderSyncQueue() {
@@ -1677,8 +1729,7 @@
         LS_UI.showToast('Preencha email e senha.', 'error');
         return;
       }
-      const isStockist = document.getElementById('chk-stockist').checked;
-      LS_DATA.setUser(email, isStockist ? 'stockist' : 'delivery');
+      LS_DATA.setUser(email, 'delivery');
       renderDashboard();
       LS_UI.showScreen('screen-dash');
       LS_UI.updateConnRibbons();
